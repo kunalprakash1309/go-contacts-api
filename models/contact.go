@@ -1,9 +1,10 @@
 package models
 
 import (
+	"fmt"
+	_ "fmt"
 	"github.com/go-contacts-api/utils"
 	"github.com/jinzhu/gorm"
-	"fmt"
 )
 
 type Contact struct{
@@ -32,7 +33,7 @@ func (contact *Contact) Validate() (map[string]interface{}, bool) {
 	return utils.Message(true, "Success"), true
 }
 
-func (contact *Contact) Create() (map[string]interface{}) {
+func (contact *Contact) Create() map[string]interface{} {
 	
 	if resp, ok := contact.Validate(); !ok{
 		return resp
@@ -43,4 +44,27 @@ func (contact *Contact) Create() (map[string]interface{}) {
 	resp := utils.Message(true, "Success")
 	resp["contact"] = contact
 	return resp
+}
+
+func GetContact(id uint) *Contact {
+
+	contact := &Contact{}
+	err := GetDB().Table("contacts").Where("id = ?", id).First(contact).Error
+	if err != nil {
+		return nil
+	}
+
+	return contact
+}
+
+func GetContacts(user uint) []*Contact {
+
+	contacts := make([]*Contact, 0)
+	err := GetDB().Table("contacts").Where("user_id = ?", user).Find(&contacts).Error
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+
+	return contacts
 }

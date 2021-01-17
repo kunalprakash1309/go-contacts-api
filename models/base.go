@@ -38,7 +38,7 @@ func init() {
 	// It will automatically create the table based on our provided model
 	// We dont need to create the table manually.
 
-	db.Debug().AutoMigrate(&Account{})
+	db.Debug().AutoMigrate(&Account{}, &Contact{})
 	fmt.Println("base")
 	// db.Debug().AutoMigrate(&Account{}, &Contact{})
 
